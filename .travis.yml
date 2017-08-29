@@ -13,6 +13,7 @@ php:
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.php-cs-fixer
 
 install:
   - composer install --no-interaction --prefer-source
@@ -20,6 +21,10 @@ install:
 script:
   - mkdir -p build/logs
   - php vendor/bin/phpunit --coverage-clover=build/logs/coverage.clover
+  - |
+    if [[ "$TRAVIS_PHP_VERSION" == '5.6' ]]; then
+        php vendor/bin/php-cs-fixer fix --config=.php_cs.dist --verbose --diff --dry-run
+    fi
 
 after_script:
   - |
